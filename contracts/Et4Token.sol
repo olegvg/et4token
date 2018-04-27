@@ -10,14 +10,13 @@ contract ET4Token is MintableToken, BurnableToken {
     string public symbol;
     string public  name;
     uint8 public decimals;
-    uint public _totalSupply;
 
     constructor(uint256 _initialAmount) public {
       symbol = "ET4";
       name = "Eticket4 Token";
       decimals = 18;
-      _totalSupply = _initialAmount;
-      balances[owner] = _totalSupply;
-      emit Transfer(address(0), owner, _totalSupply);
+      totalSupply_ = _initialAmount;
+      balances[owner] = totalSupply_;
+      /* emit Transfer(address(0), owner, totalSupply_); */
     }
 }
