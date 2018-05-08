@@ -75,8 +75,6 @@ contract ET4Token is MintableToken, BurnableToken {
       uint256 fee = escrow_element.value.mul(escrow_fee_numerator).div(escrow_fee_denominator);
       uint256 value = escrow_element.value.sub(fee);
 
-      require(value == 192);
-
       balances[escrow_element.dst] = balances[escrow_element.dst].add(value);
       balances[fee_destination] = balances[fee_destination].add(fee);
 
