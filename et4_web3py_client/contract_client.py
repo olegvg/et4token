@@ -90,14 +90,14 @@ if __name__ == '__main__':
         'gasPrice': generated_price
     }
 
-    # mint(web3.eth.accounts[0], 100000, tx_p=params)
+    mint(web3.eth.accounts[0], web3.toWei(1, 'Ether'), tx_p=params)
     mint('0x8862cE71FDCDC386D5a9b6BB5640a8FefD6DDAd0', web3.toWei(100000, 'Ether'), tx_p=params)
     mint('0xfF989e7D397e6fF1026429A87d7A5eF7c6B09c27', web3.toWei(100000, 'Ether'), tx_p=params)
 
-    # start_escrow(Web3.toBytes(12345678), RECIPIENT, 1000000, tx_p=params)
-    #
-    # release_escrow(Web3.toBytes(12345678), FEE_RECIPIENT, tx_p=params)
+    start_escrow(12345678, RECIPIENT, 1000000, tx_p=params)
 
-    # res = c_contract.balanceOf(FEE_RECIPIENT)
-    # print(res)
+    release_escrow(12345678, FEE_RECIPIENT, tx_p=params)
+
+    res = c_contract.balanceOf(FEE_RECIPIENT)
+    print(res)
 
