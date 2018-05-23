@@ -23,9 +23,9 @@ COMPILED_CONTRACT = './ET4Token.json'
 def init_contract(node_address=NODE, contract_address=CONTRACT, contract_data=COMPILED_CONTRACT, is_poa=True):
     web3_inst = Web3(HTTPProvider(node_address))
 
-    web3_inst.eth.setGasPriceStrategy(fast_gas_price_strategy)
+    web3_inst.eth.setGasPriceStrategy(rpc_gas_price_strategy)
+    # web3_inst.eth.setGasPriceStrategy(fast_gas_price_strategy)
     # web3_inst.eth.setGasPriceStrategy(medium_gas_price_strategy)
-    # web3_inst.eth.setGasPriceStrategy(rpc_gas_price_strategy)
 
     web3_inst.middleware_stack.add(simple_cache_middleware)
     web3_inst.middleware_stack.add(latest_block_based_cache_middleware)
@@ -44,29 +44,29 @@ def init_contract(node_address=NODE, contract_address=CONTRACT, contract_data=CO
     return contract_obj, web3_inst
 
 
-def mint(addr, amount, tx_p=None):
-    tx_hash = t_contract.mint(addr, amount, transact=tx_p)
+def mint(inst, addr, amount, tx_p=None):
+    tx_hash = inst.mint(addr, amount, transact=tx_p)
     print(f'waiting for tx {binascii.hexlify(tx_hash)}')
     receipt = web3.eth.waitForTransactionReceipt(tx_hash)
     return receipt
 
 
-def start_escrow(escrow_id, recipient, amount, tx_p=None):
-    tx_hash = t_contract.startEscrow(Web3.toBytes(escrow_id), recipient, amount, transact=params)
+def start_escrow(inst, escrow_id, recipient, amount, tx_p=None):
+    tx_hash = inst.startEscrow(Web3.toBytes(escrow_id), recipient, amount, transact=tx_p)
     print(f'waiting for tx {binascii.hexlify(tx_hash)}')
     receipt = web3.eth.waitForTransactionReceipt(tx_hash)
     return receipt
 
 
-def release_escrow(escrow_id, fee_recipient, tx_p=None):
-    tx_hash = t_contract.releaseEscrow(Web3.toBytes(escrow_id), fee_recipient, transact=params)
+def release_escrow(inst, escrow_id, fee_recipient, tx_p=None):
+    tx_hash = inst.releaseEscrow(Web3.toBytes(escrow_id), fee_recipient, transact=tx_p)
     print(f'waiting for tx {binascii.hexlify(tx_hash)}')
     receipt = web3.eth.waitForTransactionReceipt(tx_hash)
     return receipt
 
 
-def cancel_escrow(escrow_id, tx_p=None):
-    tx_hash = t_contract.cancelEscrow(Web3.toBytes(escrow_id), transact=params)
+def cancel_escrow(inst, escrow_id, tx_p=None):
+    tx_hash = inst.cancelEscrow(Web3.toBytes(escrow_id), transact=tx_p)
     print(f'waiting for tx {binascii.hexlify(tx_hash)}')
     receipt = web3.eth.waitForTransactionReceipt(tx_hash)
     return receipt
@@ -90,14 +90,32 @@ if __name__ == '__main__':
         'gasPrice': generated_price
     }
 
-    mint(web3.eth.accounts[0], web3.toWei(1, 'Ether'), tx_p=params)
-    mint('0x8862cE71FDCDC386D5a9b6BB5640a8FefD6DDAd0', web3.toWei(100000, 'Ether'), tx_p=params)
-    mint('0xfF989e7D397e6fF1026429A87d7A5eF7c6B09c27', web3.toWei(100000, 'Ether'), tx_p=params)
+    # mint(t_contract, web3.eth.accounts[0], web3.toWei(1, 'Ether'), tx_p=params)
+    # mint(t_contract, '0x8862cE71FDCDC386D5a9b6BB5640a8FefD6DDAd0', web3.toWei(100000, 'Ether'), tx_p=params)
+    # mint(t_contract, '0xfF989e7D397e6fF1026429A87d7A5eF7c6B09c27', web3.toWei(100000, 'Ether'), tx_p=params)
 
-    start_escrow(12345678, RECIPIENT, 1000000, tx_p=params)
+    print('OWNER', c_contract.balanceOf(OWNER))
+    print('RECIPIENT', c_contract.balanceOf(RECIPIENT))
+    print('FEE_RECIPIENT', c_contract.balanceOf(FEE_RECIPIENT))
 
-    release_escrow(12345678, FEE_RECIPIENT, tx_p=params)
+    print('starting transaction...')
+    receipt = start_escrow(t_contract, 1122334455, RECIPIENT, web3.toWei(50, 'Gwei'), tx_p=params)
+    print(receipt)
+    print('releasing transaction...')
+    receipt = release_escrow(t_contract, 1122334455, FEE_RECIPIENT, tx_p=params)
+    print(receipt)
 
-    res = c_contract.balanceOf(FEE_RECIPIENT)
-    print(res)
+    print('OWNER', c_contract.balanceOf(OWNER))
+    print('RECIPIENT', c_contract.balanceOf(RECIPIENT))
+    print('FEE_RECIPIENT', c_contract.balanceOf(FEE_RECIPIENT))
 
+    print('starting transaction...')
+    receipt = start_escrow(t_contract, 1122334455, RECIPIENT, web3.toWei(50, 'Gwei'), tx_p=params)
+    print(receipt)
+    print('cancelling transaction...')
+    receipt = cancel_escrow(t_contract, 1122334455, tx_p=params)
+    print(receipt)
+
+    print('OWNER', c_contract.balanceOf(OWNER))
+    print('RECIPIENT', c_contract.balanceOf(RECIPIENT))
+    print('FEE_RECIPIENT', c_contract.balanceOf(FEE_RECIPIENT))
