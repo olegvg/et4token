@@ -99,10 +99,10 @@ if __name__ == '__main__':
     print('FEE_RECIPIENT', c_contract.balanceOf(FEE_RECIPIENT))
 
     print('starting transaction...')
-    receipt = start_escrow(t_contract, 1122334455, RECIPIENT, web3.toWei(50, 'Gwei'), tx_p=params)
+    receipt = start_escrow(t_contract, 11223344, RECIPIENT, web3.toWei(50, 'Gwei'), tx_p=params)
     print(receipt)
     print('releasing transaction...')
-    receipt = release_escrow(t_contract, 1122334455, FEE_RECIPIENT, tx_p=params)
+    receipt = release_escrow(t_contract, 11223344, FEE_RECIPIENT, tx_p=params)
     print(receipt)
 
     print('OWNER', c_contract.balanceOf(OWNER))
@@ -110,10 +110,10 @@ if __name__ == '__main__':
     print('FEE_RECIPIENT', c_contract.balanceOf(FEE_RECIPIENT))
 
     print('starting transaction...')
-    receipt = start_escrow(t_contract, 1122334455, RECIPIENT, web3.toWei(50, 'Gwei'), tx_p=params)
+    receipt = start_escrow(t_contract, 66778899, RECIPIENT, web3.toWei(50, 'Gwei'), tx_p=params)
     print(receipt)
     print('cancelling transaction...')
-    receipt = cancel_escrow(t_contract, 1122334455, tx_p=params)
+    receipt = cancel_escrow(t_contract, 66778899, tx_p=params)
     print(receipt)
 
     print('OWNER', c_contract.balanceOf(OWNER))
