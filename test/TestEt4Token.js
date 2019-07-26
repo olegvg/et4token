@@ -30,11 +30,11 @@ contract('Et4Token test', async (accounts) => {
   it("should put 200 ET4 tokens from account2 to escrow in favor of address3 then release escrow", async () => {
     let instance = await Et4Token.deployed();
 
-    await instance.startEscrow('1234567', account3, 200, {from: account2});
+    await instance.startEscrow(web3.utils.asciiToHex('1234567', 20), account3, 200, {from: account2});
     let balance2 = await instance.balanceOf.call(account2);
-    assert.equal(balance2.valueOf(), 19800, "balance of a source account2 must be exactly 19800");
+    assert.equal(balance2.toNumber(), 19800, "balance of a source account2 must be exactly 19800");
 
-    await instance.releaseEscrow('1234567', account9);
+    await instance.releaseEscrow(web3.utils.asciiToHex('1234567', 20), account9);
     let balance3 = await instance.balanceOf.call(account3);
     assert.equal(balance3.valueOf(), 192, "balance of a target account3 must be exactly 192");
     let balance9 = await instance.balanceOf.call(account9);
@@ -44,11 +44,11 @@ contract('Et4Token test', async (accounts) => {
   it("should put 400 ET4 tokens from account2 to escrow in favor of address4 then cancel escrow", async () => {
     let instance = await Et4Token.deployed();
 
-    await instance.startEscrow('7654321', account4, 400, {from: account2});
+    await instance.startEscrow(web3.utils.asciiToHex('7654321', 20), account4, 400, {from: account2});
     let balance2 = await instance.balanceOf.call(account2);
     assert.equal(balance2.valueOf(), 19400, "balance of a source account2 must be exactly 19400");
 
-    await instance.cancelEscrow('7654321');
+    await instance.cancelEscrow(web3.utils.asciiToHex('7654321', 20));
     balance2 = await instance.balanceOf.call(account2);
     assert.equal(balance2.valueOf(), 19800, "balance of a source account2 must be exactly 19800");
     let balance4 = await instance.balanceOf.call(account4);
