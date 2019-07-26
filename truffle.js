@@ -10,5 +10,14 @@ module.exports = {
       port: 48545,
       network_id: 4 // rinkeby
     }
+  },
+    compilers: {
+    solc: {
+       version: "0.4.26",
+        optimizer: {
+          enabled: false,
+          runs: 200
+        },
+    }
   }
 };
