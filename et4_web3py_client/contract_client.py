@@ -17,7 +17,7 @@ OWNER = Web3.toChecksumAddress('0x6412fcedcedeb20a8bb990c6041d2cdee0404fa7')
 RECIPIENT = Web3.toChecksumAddress('0xff989e7d397e6ff1026429a87d7a5ef7c6b09c27')
 FEE_RECIPIENT = Web3.toChecksumAddress('0x8862ce71fdcdc386d5a9b6bb5640a8fefd6ddad0')
 
-COMPILED_CONTRACT = './ET4Token.json'
+COMPILED_CONTRACT = '../build/contracts/ET4Token.json'
 
 
 def init_contract(node_address=NODE, contract_address=CONTRACT, contract_data=COMPILED_CONTRACT, is_poa=True):
